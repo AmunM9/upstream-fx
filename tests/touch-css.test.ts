@@ -28,4 +28,8 @@ describe('playground touch contract (phones)', () => {
     expect(rule('.panel-content')).toMatch(/touch-action: pan-x pan-y pinch-zoom/)
     expect(rule('pre')).toMatch(/user-select: text/)
   })
+
+  test('sliders own horizontal drags, so the panel never steals them as a sideways scroll', () => {
+    expect(rule("input[type='range']")).toMatch(/touch-action: pan-y/)
+  })
 })

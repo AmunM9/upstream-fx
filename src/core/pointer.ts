@@ -17,6 +17,19 @@ export interface PointerTracker {
   dispose(): void
 }
 
+/** Elements carrying this attribute (and everything inside them) don't move the field. */
+export const IGNORE_ATTRIBUTE = 'data-upstream-ignore'
+
+/**
+ * True when the event started inside an opted-out element. Uses the composed
+ * path so it also works through shadow DOM, and the target of a touch drag stays
+ * the element where the finger first landed, so a drag on a slider never leaks.
+ */
+function isIgnored(event: Event): boolean {
+  const path = typeof event.composedPath === 'function' ? event.composedPath() : []
+  return path.some((node) => node instanceof Element && node.hasAttribute(IGNORE_ATTRIBUTE))
+}
+
 /** Tracks the pointer over a canvas through window-level listeners, so overlaid content never blocks it. */
 export function createPointerTracker(canvas: HTMLCanvasElement): PointerTracker {
   const state = { x: 0, y: 0, targetX: 0, targetY: 0, influence: 0, inside: false }
@@ -39,6 +52,12 @@ export function createPointerTracker(canvas: HTMLCanvasElement): PointerTracker 
   }
 
   function onMove(event: PointerEvent): void {
+    // Over UI that sits on top of the field (an open panel), the field lets go.
+    if (isIgnored(event)) {
+      state.inside = false
+      client = null
+      return
+    }
     client = { x: event.clientX, y: event.clientY }
     locate()
   }

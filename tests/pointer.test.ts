@@ -140,3 +140,45 @@ describe('touch', () => {
     expect(tracker?.influence).toBeLessThan(0.01)
   })
 })
+
+describe('elements that opt out with data-upstream-ignore (e.g. open panels)', () => {
+  function panelButton(): HTMLButtonElement {
+    document.body.innerHTML = '<aside data-upstream-ignore><div><button type="button">slider</button></div></aside>'
+    return document.querySelector('button') as HTMLButtonElement
+  }
+
+  function pointerOn(target: Element, type: string, x: number, y: number, pointerType = 'touch'): void {
+    const event = new MouseEvent(type, { clientX: x, clientY: y, bubbles: true, composed: true })
+    Object.defineProperty(event, 'pointerType', { value: pointerType })
+    target.dispatchEvent(event)
+  }
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  test('a finger on a panel does not move the field behind it', () => {
+    setup()
+    pointerOn(panelButton(), 'pointerdown', 60, 50)
+    pointerOn(panelButton(), 'pointermove', 90, 50)
+    run(120)
+    expect(tracker?.influence).toBeLessThan(0.01)
+  })
+
+  test('moving the mouse from the field onto a panel fades the field out', () => {
+    setup()
+    move(60, 50)
+    run(120)
+    pointerOn(panelButton(), 'pointermove', 70, 50, 'mouse')
+    run(120)
+    expect(tracker?.influence).toBeLessThan(0.01)
+  })
+
+  test('the field still reacts everywhere else', () => {
+    setup()
+    panelButton()
+    pointerOn(document.body, 'pointerdown', 60, 50)
+    run(120)
+    expect(tracker?.influence).toBeGreaterThan(0.99)
+  })
+})

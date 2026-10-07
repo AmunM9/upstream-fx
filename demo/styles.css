@@ -435,6 +435,8 @@ input[type='range'] {
   grid-column: 1 / -1;
   width: 100%;
   height: 18px;
+  /* Horizontal drags belong to the slider; only vertical ones scroll the panel. */
+  touch-action: pan-y;
   margin: 0;
   background: transparent;
   appearance: none;
@@ -734,6 +736,11 @@ pre {
 
   .panel-pill {
     height: 44px; /* comfortable touch target */
+  }
+
+  /* A taller hit area for fingers; the visible track stays 2px. */
+  input[type='range'] {
+    height: 32px;
   }
 
   pre {

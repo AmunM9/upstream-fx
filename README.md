@@ -99,6 +99,17 @@ This copies the component and its engine into `components/upstream/`, so you own
 | `interactive` | `true` | React to the pointer |
 | `paused` | `false` | Freeze time (pointer still works while `interactive`) |
 
+### UI on top of the effect
+
+The effect listens to the pointer across the whole page, so a headline or button laid
+over it doesn't block it. Add `data-upstream-ignore` to UI that should *not* move the
+streaks, such as a menu, a modal or a settings panel. Touches and hovers inside it leave
+the field alone:
+
+```html
+<aside data-upstream-ignore>…</aside>
+```
+
 Invalid values never throw: numbers are clamped to their range and invalid colors keep the previous value.
 
 ## How it works
