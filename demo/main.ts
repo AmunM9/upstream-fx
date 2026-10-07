@@ -217,7 +217,7 @@ async function showStars(): Promise<void> {
   if (count === null) return // the link still works, just without a number
   byId('github-star-count').textContent = formatStars(count)
   byId('github-stars').hidden = false
-  byId('github-link').setAttribute('aria-label', `Upstream on GitHub, ${count} ${count === 1 ? 'star' : 'stars'}`)
+  byId('github-link').setAttribute('aria-label', `Star Upstream on GitHub, ${count} ${count === 1 ? 'star' : 'stars'} so far`)
 }
 
 void showStars()
