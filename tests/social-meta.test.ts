@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 

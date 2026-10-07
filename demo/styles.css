@@ -242,6 +242,11 @@ h1 {
   transition: clip-path var(--duration-morph) var(--ease-out-expo);
 }
 
+.panel:not([data-ready]),
+.panel:not([data-ready]) * {
+  transition: none !important;
+}
+
 .panel[data-state='collapsed'] {
   clip-path: inset(var(--clip-top) var(--clip-right) var(--clip-bottom) var(--clip-left) round var(--pill-radius));
 }
@@ -275,14 +280,19 @@ h1 {
     border-color var(--duration-fast);
 }
 
-.panel[data-anchor='top-right'] .panel-pill {
+.panel[data-corner='top-right'] .panel-pill {
   top: 0;
   right: 0;
 }
 
-.panel[data-anchor='bottom-left'] .panel-pill {
+.panel[data-corner='bottom-left'] .panel-pill {
   bottom: 0;
   left: 0;
+}
+
+.panel[data-corner='bottom-right'] .panel-pill {
+  right: 0;
+  bottom: 0;
 }
 
 .panel[data-state='collapsed'] .panel-pill {
@@ -358,7 +368,7 @@ h2 {
 }
 
 .console .panel-content {
-  max-height: calc(100svh - 2 * var(--gutter));
+  max-height: calc(100svh - 2 * var(--gutter) - 2px); /* 2px: the panel's top and bottom border */
   overflow-y: auto;
   padding: var(--space-4) var(--space-4) var(--space-2);
   scrollbar-width: thin;
@@ -653,6 +663,9 @@ pre {
 
 .sr-only {
   position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0; /* a paragraph margin here would push the page past one screen */
   width: 1px;
   height: 1px;
   overflow: hidden;
@@ -660,27 +673,56 @@ pre {
   white-space: nowrap;
 }
 
+/* Compact (phones, small tablets) ------------------------------------------
+   One screen, no page scroll: the hero sits over the effect and both panels
+   become bottom sheets that fold into a button row (Install left, Tune right).
+   Keep the breakpoint in sync with COMPACT_LAYOUT_QUERY in demo/main.ts. */
 @media (max-width: 860px) {
   .layout {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto;
-    grid-template-areas:
-      'masthead'
-      'install'
-      'console';
-    padding-top: 30svh;
+    display: block;
+    min-height: 100svh;
+    padding-top: clamp(var(--gutter), 30svh - 3rem, 30svh);
+    padding-bottom: calc(var(--pill-height) + 2 * var(--gutter));
+  }
+
+  .panel {
+    position: fixed;
+    z-index: 10;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: calc(var(--gutter) + env(safe-area-inset-bottom));
+    width: auto;
+    background: rgb(6 12 10 / 0.88);
+  }
+
+  .panel[data-state='expanded'] {
+    z-index: 20;
+  }
+
+  .panel .panel-content {
+    max-height: min(72svh, 640px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .console {
-    position: static;
+    top: auto;
   }
 
-  .console .panel-content {
-    max-height: none;
+  /* Both sheets fold down, so the Tune chevron points down too. */
+  .console [data-collapse] svg {
+    transform: rotate(180deg);
   }
 
-  .install {
-    width: 100%;
+  .panel-pill {
+    height: 44px; /* comfortable touch target */
+  }
+
+  pre {
+    height: auto;
+    max-height: 13.5rem;
+    font-size: 0.75rem;
+    white-space: pre-wrap; /* wrap at spaces; long tokens (URLs) still scroll sideways */
   }
 }
 

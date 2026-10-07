@@ -14,6 +14,10 @@ describe('collapsedInsets', () => {
     expect(collapsedInsets(PANEL, PILL, 'bottom-left')).toEqual({ top: 560, right: 220, bottom: 0, left: 0 })
   })
 
+  test('bottom-right: the panel shrinks down and to the right, into the pill', () => {
+    expect(collapsedInsets(PANEL, PILL, 'bottom-right')).toEqual({ top: 560, right: 0, bottom: 0, left: 220 })
+  })
+
   test('never produces negative insets when the pill is larger than the panel', () => {
     const insets = collapsedInsets({ width: 50, height: 20 }, PILL, 'top-right')
     expect(Math.min(...Object.values(insets))).toBe(0)
@@ -22,7 +26,7 @@ describe('collapsedInsets', () => {
 
 function mountPanel(): HTMLElement {
   document.body.innerHTML = `
-    <section class="panel" data-anchor="bottom-left">
+    <section class="panel" data-anchor="bottom-left" data-anchor-compact="bottom-right">
       <div class="panel-content"><button type="button" data-collapse>Hide</button><a href="#">link</a></div>
       <button type="button" class="panel-pill">Install</button>
     </section>`
@@ -80,5 +84,32 @@ describe('createCollapsiblePanel', () => {
     ;(root.querySelector('[data-collapse]') as HTMLButtonElement).click()
     expect(root.style.getPropertyValue('--clip-top')).toMatch(/px$/)
     expect(root.style.getPropertyValue('--clip-left')).toBe('0px')
+  })
+})
+
+describe('compact (mobile) layout', () => {
+  test('uses the compact corner when the layout is compact, the regular one otherwise', () => {
+    const compact = mountPanel()
+    createCollapsiblePanel(compact, { isCompact: () => true })
+    expect(compact.dataset.corner).toBe('bottom-right')
+
+    const regular = mountPanel()
+    createCollapsiblePanel(regular, { isCompact: () => false })
+    expect(regular.dataset.corner).toBe('bottom-left')
+  })
+
+  test('can start collapsed, so the effect is visible first', () => {
+    const root = mountPanel()
+    createCollapsiblePanel(root, { startExpanded: false })
+    expect(root.dataset.state).toBe('collapsed')
+    expect(root.querySelector('.panel-content')?.hasAttribute('inert')).toBe(true)
+  })
+
+  test('reports when it expands, so other panels can close', () => {
+    const root = mountPanel()
+    const opened: string[] = []
+    createCollapsiblePanel(root, { startExpanded: false, onExpand: () => opened.push('install') })
+    ;(root.querySelector('.panel-pill') as HTMLButtonElement).click()
+    expect(opened).toEqual(['install'])
   })
 })

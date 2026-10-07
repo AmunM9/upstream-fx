@@ -3,7 +3,7 @@ import { createUpstream } from '../src/core/engine'
 import { DEFAULT_OPTIONS, resolveOptions, type UpstreamOptions, type UpstreamOptionsInput } from '../src/core/options'
 import { COLOR_CONTROLS, FLAG_CONTROLS, PRESETS, SLIDER_GROUPS, type SliderSpec } from './controls'
 import { fetchStarCount, formatStars } from './github-stars'
-import { createCollapsiblePanel } from './panels'
+import { createCollapsiblePanel, type CollapsiblePanel } from './panels'
 import { randomOptions } from './randomize'
 import { buildSnippet, type SnippetFormat } from './snippets'
 import { optionsFromQuery, optionsToQuery } from './url-state'
@@ -16,6 +16,8 @@ const FORMATS: readonly { readonly id: SnippetFormat; readonly label: string }[]
 ]
 const COPIED_FEEDBACK_MS = 1400
 const GITHUB_REPO = 'AmunM9/upstream-fx'
+// Keep in sync with the compact breakpoint in demo/styles.css.
+const COMPACT_LAYOUT_QUERY = '(max-width: 860px)'
 const URL_SYNC_DELAY_MS = 250
 
 function byId<T extends HTMLElement>(id: string): T {
@@ -195,7 +197,7 @@ async function copyText(text: string, button: HTMLButtonElement, message: string
 buildControls()
 buildPresets()
 buildTabs()
-document.querySelectorAll<HTMLElement>('.panel').forEach((panel) => createCollapsiblePanel(panel))
+setUpPanels()
 selectTab(format)
 update({})
 
@@ -211,6 +213,29 @@ byId<HTMLButtonElement>('reset').addEventListener('click', () => {
   update(DEFAULT_OPTIONS)
   announcer.textContent = 'Reset to defaults'
 })
+
+/**
+ * Desktop: both panels start open. Compact (mobile): both start folded into a
+ * button row at the bottom so the effect is visible first, and only one sheet
+ * is open at a time because they share the bottom of the screen.
+ */
+function setUpPanels(): void {
+  const compactQuery = window.matchMedia(COMPACT_LAYOUT_QUERY)
+  const isCompact = (): boolean => compactQuery.matches
+  const panels: CollapsiblePanel[] = []
+  const closeOthers = (opened: () => CollapsiblePanel | undefined): void => {
+    if (!isCompact()) return
+    const current = opened()
+    panels.filter((panel) => panel !== current).forEach((panel) => panel.collapse())
+  }
+  document.querySelectorAll<HTMLElement>('.panel').forEach((root, index) => {
+    panels.push(createCollapsiblePanel(root, { isCompact, startExpanded: !isCompact(), onExpand: () => closeOthers(() => panels[index]) }))
+  })
+  compactQuery.addEventListener('change', () => {
+    if (isCompact()) panels.forEach((panel) => panel.collapse())
+    else panels.forEach((panel) => panel.expand())
+  })
+}
 
 async function showStars(): Promise<void> {
   const count = await fetchStarCount(GITHUB_REPO)
