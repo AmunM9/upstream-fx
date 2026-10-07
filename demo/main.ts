@@ -5,6 +5,7 @@ import { COLOR_CONTROLS, FLAG_CONTROLS, PRESETS, SLIDER_GROUPS, type SliderSpec 
 import { fetchStarCount, formatStars } from './github-stars'
 import { createCollapsiblePanel, type CollapsiblePanel } from './panels'
 import { randomOptions } from './randomize'
+import { attachTouchSlider } from './slider-touch'
 import { buildSnippet, type SnippetFormat } from './snippets'
 import { optionsFromQuery, optionsToQuery } from './url-state'
 
@@ -16,6 +17,7 @@ const FORMATS: readonly { readonly id: SnippetFormat; readonly label: string }[]
 ]
 const COPIED_FEEDBACK_MS = 1400
 const GITHUB_REPO = 'AmunM9/upstream-fx'
+const DEFAULT_THUMB_WIDTH = 10
 // Keep in sync with the compact breakpoint in demo/styles.css.
 const COMPACT_LAYOUT_QUERY = '(max-width: 860px)'
 const URL_SYNC_DELAY_MS = 250
@@ -91,6 +93,7 @@ function buildSlider(spec: SliderSpec): HTMLElement {
   const readout = create('output', { className: 'readout' })
   readout.setAttribute('for', id)
   const input = create('input', { type: 'range', id, min: String(spec.min), max: String(spec.max), step: String(spec.step) })
+  attachTouchSlider(input, () => parseFloat(getComputedStyle(input).getPropertyValue('--thumb-width')) || DEFAULT_THUMB_WIDTH)
   input.addEventListener('input', () => update({ [spec.key]: Number(input.value) }))
   syncers.push((next) => {
     const value = next[spec.key]
