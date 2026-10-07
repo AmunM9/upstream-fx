@@ -10,3 +10,5 @@ coverage/
 .vercel-cli/
 .DS_Store
 *.tsbuildinfo
+.vercel
+.env*

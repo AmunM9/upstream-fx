@@ -4,6 +4,8 @@
   <img src="docs/media/demo.webp" alt="Luminous green streaks fan upward from below the frame and part in a rounded gap around a moving cursor" width="800" />
 </p>
 
+<p align="center"><a href="https://upstream-fx.vercel.app"><strong>Open the live playground →</strong></a></p>
+
 Interactive WebGL background: hundreds of hairline streaks fan upward from a point
 just below the frame, each fading from a dark tail to a lit head. They part in a
 rounded gap around the cursor and close again right behind it.
