@@ -2,7 +2,9 @@ import { parseColor } from '../src/core/color'
 import { createUpstream } from '../src/core/engine'
 import { DEFAULT_OPTIONS, resolveOptions, type UpstreamOptions, type UpstreamOptionsInput } from '../src/core/options'
 import { COLOR_CONTROLS, FLAG_CONTROLS, PRESETS, SLIDER_GROUPS, type SliderSpec } from './controls'
+import { fetchStarCount, formatStars } from './github-stars'
 import { createCollapsiblePanel } from './panels'
+import { randomOptions } from './randomize'
 import { buildSnippet, type SnippetFormat } from './snippets'
 import { optionsFromQuery, optionsToQuery } from './url-state'
 
@@ -13,6 +15,7 @@ const FORMATS: readonly { readonly id: SnippetFormat; readonly label: string }[]
   { id: 'shadcn', label: 'shadcn' },
 ]
 const COPIED_FEEDBACK_MS = 1400
+const GITHUB_REPO = 'AmunM9/upstream-fx'
 const URL_SYNC_DELAY_MS = 250
 
 function byId<T extends HTMLElement>(id: string): T {
@@ -200,7 +203,21 @@ const copyButton = byId<HTMLButtonElement>('copy')
 copyButton.addEventListener('click', () => void copyText(snippet.textContent ?? '', copyButton, 'Snippet copied'))
 const shareButton = byId<HTMLButtonElement>('share')
 shareButton.addEventListener('click', () => void copyText(location.href, shareButton, 'Link copied'))
+byId<HTMLButtonElement>('randomize').addEventListener('click', () => {
+  update(randomOptions(Math.random))
+  announcer.textContent = 'Randomized'
+})
 byId<HTMLButtonElement>('reset').addEventListener('click', () => {
   update(DEFAULT_OPTIONS)
   announcer.textContent = 'Reset to defaults'
 })
+
+async function showStars(): Promise<void> {
+  const count = await fetchStarCount(GITHUB_REPO)
+  if (count === null) return // the link still works, just without a number
+  byId('github-star-count').textContent = formatStars(count)
+  byId('github-stars').hidden = false
+  byId('github-link').setAttribute('aria-label', `Upstream on GitHub, ${count} ${count === 1 ? 'star' : 'stars'}`)
+}
+
+void showStars()
