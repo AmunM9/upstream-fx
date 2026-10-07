@@ -51,6 +51,21 @@ body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   -webkit-font-smoothing: antialiased;
+  /* The page is a touch surface for the effect: no pull-to-refresh or bounce,
+     no text selection or callout menu on long-press, no grey tap flash. */
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* A finger dragged over the effect (or the hero text on top of it) steers the
+   streaks instead of scrolling or zooming the page. Without this the browser
+   claims the gesture and cancels the pointer after the first few pixels. */
+#field,
+.masthead {
+  touch-action: none;
 }
 
 #field {
@@ -252,6 +267,7 @@ h1 {
 }
 
 .panel-content {
+  touch-action: pan-x pan-y pinch-zoom; /* panels scroll and zoom normally */
   transition: opacity var(--duration-fast) ease 120ms;
 }
 
@@ -594,6 +610,8 @@ input[type='color'] {
 
 pre {
   margin: 0;
+  user-select: text; /* the one place where selecting text is useful */
+  -webkit-user-select: text;
   /* Fixed height: switching tabs or presets must not move the controls. */
   height: 13.5rem;
   overflow: auto;

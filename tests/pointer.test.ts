@@ -97,3 +97,46 @@ describe('createPointerTracker', () => {
     expect(tracker?.influence).toBe(0)
   })
 })
+
+function touch(type: string, x = 0, y = 0): void {
+  const event = new MouseEvent(type, { clientX: x, clientY: y })
+  Object.defineProperty(event, 'pointerType', { value: 'touch' })
+  window.dispatchEvent(event)
+}
+
+describe('touch', () => {
+  test('pressing a finger activates the field right where it lands', () => {
+    setup()
+    touch('pointerdown', 60, 50)
+    run(120)
+    expect(tracker?.x).toBe(60)
+    expect(tracker?.influence).toBeGreaterThan(0.99)
+  })
+
+  test('dragging the finger moves the gap along with it', () => {
+    setup()
+    touch('pointerdown', 60, 50)
+    run(30)
+    touch('pointermove', 150, 50)
+    run(120)
+    expect(tracker?.x).toBeCloseTo(150, 0)
+  })
+
+  test('lifting the finger fades the field out', () => {
+    setup()
+    touch('pointerdown', 60, 50)
+    run(120)
+    touch('pointerup', 60, 50)
+    run(120)
+    expect(tracker?.influence).toBeLessThan(0.01)
+  })
+
+  test('a gesture the browser takes over (pointercancel) also fades it out', () => {
+    setup()
+    touch('pointerdown', 60, 50)
+    run(120)
+    touch('pointercancel')
+    run(120)
+    expect(tracker?.influence).toBeLessThan(0.01)
+  })
+})
