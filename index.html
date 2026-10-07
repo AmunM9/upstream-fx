@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Upstream — an interactive WebGL background of streaks fanning upward. React, Web Component or vanilla JS. Zero dependencies." />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000'/%3E%3Cpath d='M16 30 6 4M16 30 12 3M16 30 20 3M16 30 26 4' stroke='%2325d39b' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <title>Upstream — WebGL streak background</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/demo/styles.css" />
+  </head>
+  <body>
+    <canvas id="field" aria-hidden="true"></canvas>
+
+    <div class="layout">
+      <header class="masthead">
+        <p class="eyebrow">WebGL · 0 dependencies · ~8 KB gzip</p>
+        <h1>Upstream</h1>
+        <p class="lede">Streaks fan up from below the frame and part around your cursor.</p>
+        <nav class="presets" aria-label="Presets"></nav>
+      </header>
+
+      <aside class="console panel" data-anchor="top-right" aria-labelledby="console-title">
+        <div class="panel-content" id="console-body">
+          <div class="console-head">
+            <h2 id="console-title">Tune</h2>
+            <div class="head-actions">
+              <button type="button" class="ghost" id="reset">Reset</button>
+              <button type="button" class="icon-button" data-collapse aria-controls="console-body" aria-label="Hide the tune panel">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 10l4-4 4 4" /></svg>
+              </button>
+            </div>
+          </div>
+          <div id="controls"></div>
+        </div>
+        <button type="button" class="panel-pill" aria-controls="console-body" aria-label="Show the tune panel">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h7M13 4h1M2 12h2M8 12h6" /><circle cx="11" cy="4" r="2" /><circle cx="6" cy="12" r="2" /></svg>
+          Tune
+        </button>
+      </aside>
+
+      <section class="install panel" data-anchor="bottom-left" aria-labelledby="install-title">
+        <div class="panel-content" id="install-body">
+          <div class="install-head">
+            <h2 id="install-title">Install</h2>
+            <div class="head-actions">
+              <div class="tabs" role="tablist" aria-label="Install format"></div>
+              <button type="button" class="icon-button" data-collapse aria-controls="install-body" aria-label="Hide the install panel">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
+              </button>
+            </div>
+          </div>
+          <div class="code-wrap">
+            <pre id="snippet-panel" role="tabpanel"><code id="snippet"></code></pre>
+            <button type="button" class="copy" id="copy">Copy</button>
+          </div>
+          <p class="share">The URL updates as you tune — <button type="button" class="link" id="share">copy link to this preset</button></p>
+        </div>
+        <button type="button" class="panel-pill" aria-controls="install-body" aria-label="Show the install panel">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4L2 8l4 4M10 4l4 4-4 4" /></svg>
+          Install
+        </button>
+      </section>
+    </div>
+
+    <p class="sr-only" aria-live="polite" id="announcer"></p>
+    <script type="module" src="/demo/main.ts"></script>
+  </body>
+</html>

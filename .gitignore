@@ -1,0 +1,12 @@
+node_modules/
+# Built package: only the script-tag bundle is committed, so jsDelivr can serve it from GitHub.
+dist/*
+!dist/upstream.global.js
+site/
+coverage/
+# Local tooling: Claude Code / ECC setup and the project-scoped Vercel login.
+.claude/
+.vercel/
+.vercel-cli/
+.DS_Store
+*.tsbuildinfo

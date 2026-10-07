@@ -1,0 +1,66 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "upstream-fx",
+  "homepage": "https://github.com/AmunM9/upstream-fx",
+  "items": [
+    {
+      "name": "upstream",
+      "type": "registry:block",
+      "title": "Upstream",
+      "description": "Interactive WebGL background of luminous streaks fanning upward that part around the cursor. Zero dependencies.",
+      "dependencies": [],
+      "files": [
+        {
+          "path": "src/react/Upstream.tsx",
+          "type": "registry:component",
+          "target": "@components/upstream/react/Upstream.tsx"
+        },
+        {
+          "path": "src/core/engine.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/engine.ts"
+        },
+        {
+          "path": "src/core/options.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/options.ts"
+        },
+        {
+          "path": "src/core/color.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/color.ts"
+        },
+        {
+          "path": "src/core/geometry.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/geometry.ts"
+        },
+        {
+          "path": "src/core/gl.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/gl.ts"
+        },
+        {
+          "path": "src/core/motion.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/motion.ts"
+        },
+        {
+          "path": "src/core/shaders.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/shaders.ts"
+        },
+        {
+          "path": "src/core/pointer.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/pointer.ts"
+        },
+        {
+          "path": "src/core/renderer.ts",
+          "type": "registry:lib",
+          "target": "@components/upstream/core/renderer.ts"
+        }
+      ]
+    }
+  ]
+}

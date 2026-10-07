@@ -1,0 +1,99 @@
+{
+  "name": "upstream-fx",
+  "version": "0.1.0",
+  "description": "Interactive WebGL background of luminous streaks fanning upward, parting around the cursor. Zero runtime dependencies. React component, Web Component and vanilla API.",
+  "license": "MIT",
+  "author": "Manuel Torres",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmunM9/upstream-fx.git"
+  },
+  "homepage": "https://github.com/AmunM9/upstream-fx#readme",
+  "bugs": {
+    "url": "https://github.com/AmunM9/upstream-fx/issues"
+  },
+  "type": "module",
+  "sideEffects": [
+    "./dist/element.js",
+    "./dist/upstream.global.js"
+  ],
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "unpkg": "./dist/upstream.global.js",
+  "jsdelivr": "./dist/upstream.global.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/types/react/Upstream.d.ts",
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
+    "./element": {
+      "types": "./dist/types/element/register.d.ts",
+      "import": "./dist/element.js",
+      "default": "./dist/element.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --config vite.lib.config.ts && vite build --config vite.cdn.config.ts && tsc -p tsconfig.build.json && node scripts/smoke-cdn.mjs",
+    "build:demo": "npm run build:registry && vite build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "build:registry": "node scripts/build-registry.mjs",
+    "prepare": "npm run build",
+    "vercel:login": "npx -y vercel@latest login --global-config .vercel-cli",
+    "deploy": "npx -y vercel@latest deploy --prod --global-config .vercel-cli"
+  },
+  "keywords": [
+    "webgl",
+    "background",
+    "animation",
+    "streaks",
+    "particles",
+    "react",
+    "web-component",
+    "hero"
+  ],
+  "devDependencies": {
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/coverage-v8": "^5.0.3",
+    "jsdom": "^29.1.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
+  },
+  "typesVersions": {
+    "*": {
+      "react": [
+        "./dist/types/react/Upstream.d.ts"
+      ],
+      "element": [
+        "./dist/types/element/register.d.ts"
+      ]
+    }
+  }
+}
