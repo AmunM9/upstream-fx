@@ -113,3 +113,27 @@ describe('compact (mobile) layout', () => {
     expect(opened).toEqual(['install'])
   })
 })
+
+describe('blocking the effect behind the panel', () => {
+  test('on phones the panel covers the effect, so touches on it do not move the streaks', () => {
+    const root = mountPanel()
+    createCollapsiblePanel(root, { isCompact: () => true })
+    expect(root.hasAttribute('data-upstream-ignore')).toBe(true)
+  })
+
+  test('on desktop the effect keeps reacting behind the panels', () => {
+    const root = mountPanel()
+    root.setAttribute('data-upstream-ignore', '')
+    createCollapsiblePanel(root, { isCompact: () => false })
+    expect(root.hasAttribute('data-upstream-ignore')).toBe(false)
+  })
+
+  test('follows the layout when the window crosses the breakpoint', () => {
+    const root = mountPanel()
+    let compact = false
+    createCollapsiblePanel(root, { isCompact: () => compact })
+    compact = true
+    window.dispatchEvent(new Event('resize'))
+    expect(root.hasAttribute('data-upstream-ignore')).toBe(true)
+  })
+})

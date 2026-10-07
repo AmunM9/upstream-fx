@@ -1,3 +1,5 @@
+import { IGNORE_ATTRIBUTE } from '../src/core/pointer'
+
 export type Anchor = 'top-right' | 'bottom-left' | 'bottom-right'
 
 interface Size {
@@ -71,6 +73,9 @@ export function createCollapsiblePanel(root: HTMLElement, options: PanelOptions 
   function layout(): void {
     const anchor = corner()
     root.dataset.corner = anchor
+    // On phones the sheet covers the effect, so touches on it must not steer the
+    // streaks; on desktop the panels sit beside it and the effect keeps reacting.
+    root.toggleAttribute(IGNORE_ATTRIBUTE, isCompact())
     const rect = root.getBoundingClientRect()
     const pillSize = { width: pill?.offsetWidth ?? 0, height: pill?.offsetHeight ?? 0 }
     const insets = collapsedInsets(rect, pillSize, anchor)
